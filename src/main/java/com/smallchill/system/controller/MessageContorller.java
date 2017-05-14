@@ -135,19 +135,19 @@ public class MessageContorller extends CurdController<Message> {
             String sp_code = getParameter("sp_code");
             String report2 = getParameter("report2");
             params.put("ACCOUNT", account);
-            if (StringUtils.isEmpty(month_seq)) {
+            if (!StringUtils.isEmpty(month_seq)) {
                 params.put("MONTH_SEQ", month_seq);
             }
-            if (StringUtils.isEmpty(mobile)) {
+            if (!StringUtils.isEmpty(mobile)) {
                 params.put("MOBILE", mobile);
             }
-            if (StringUtils.isEmpty(content)) {
+            if (!StringUtils.isEmpty(content)) {
                 params.put("CONTENT", content);
             }
-            if (StringUtils.isEmpty(create_time_dategt)) {
+            if (!StringUtils.isEmpty(create_time_dategt)) {
                 params.put("CREATE_TIME_dategt", create_time_dategt);
             }
-            if (StringUtils.isEmpty(create_time_datelt)) {
+            if (!StringUtils.isEmpty(create_time_datelt)) {
                 params.put("CREATE_TIME_datelt", create_time_datelt);
             }
             if (null != report) {
@@ -163,10 +163,10 @@ public class MessageContorller extends CurdController<Message> {
                     params.put("SUBMIT_TYPE", submit_type);
                 }
             }
-            if (StringUtils.isEmpty(sp_code)) {
+            if (!StringUtils.isEmpty(sp_code)) {
                 params.put("SP_CODE", sp_code);
             }
-            if (StringUtils.isEmpty(report2)) {
+            if (!StringUtils.isEmpty(report2)) {
                 params.put("REPORT", report2);
             }
             where = URLEncoder.encode(JSON.toJSONString(params), "UTF-8");
@@ -231,19 +231,19 @@ public class MessageContorller extends CurdController<Message> {
             String create_time_datelt = getParameter("create_time_datelt");
             String sp_code = getParameter("sp_code");
             params.put("ACCOUNT", account);
-            if (StringUtils.isEmpty(mobile)) {
+            if (!StringUtils.isEmpty(mobile)) {
                 params.put("MOBILE", mobile);
             }
-            if (StringUtils.isEmpty(content)) {
+            if (!StringUtils.isEmpty(content)) {
                 params.put("CONTENT", content);
             }
-            if (StringUtils.isEmpty(create_time_dategt)) {
+            if (!StringUtils.isEmpty(create_time_dategt)) {
                 params.put("CREATE_TIME_dategt", create_time_dategt);
             }
             if (StringUtils.isEmpty(create_time_datelt)) {
                 params.put("CREATE_TIME_datelt", create_time_datelt);
             }
-            if (StringUtils.isEmpty(sp_code)) {
+            if (!StringUtils.isEmpty(sp_code)) {
                 params.put("SP_CODE", sp_code);
             }
             where = URLEncoder.encode(JSON.toJSONString(params), "UTF-8");
