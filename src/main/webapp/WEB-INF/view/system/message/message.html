@@ -1,0 +1,144 @@
+@layout("/common/_container.html"){
+<script type="text/javascript">
+    var ctx = "${ctxPath}";
+    var grid_selector = "#grid-table";
+    var pager_selector = "#grid-pager";
+
+    $(function () {
+        initGrid();
+//		initMenuBtn("btns","${code}");
+    });
+
+function getNowFormatDate() {
+    var date = new Date();
+    var seperator1 = "-";
+    var seperator2 = ":";
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var strDate = date.getDate();
+    if (month >= 1 && month <= 9) {
+        month = "0" + month;
+    }
+    if (strDate >= 0 && strDate <= 9) {
+        strDate = "0" + strDate;
+    }
+    var currentdate = year + seperator1 + month + seperator1 + strDate;
+    return currentdate;
+}
+    function initGrid() {
+        var grid_url = ctx + "/${code}/list";//查询列表接口
+        var _colnames = ["账号", "提交方式", "手机号码", "发送状态", "发送时间", "接收时间", "短信内容", "接入号"];
+        var _colmodel = [
+            {name: "ACCOUNT", index: "ACCOUNT", width: 30},
+            {
+                name: "SUBMIT_TYPE", index: "SUBMIT_TYPE", width: 30, formatter: function (cellvalue, options, rowObject) {
+                switch (cellvalue) {
+                    case 1:
+                        return "WEB提交";
+                    case 2:
+                        return "单发接口提交";
+                    case 3:
+                        return "群发接口提交";
+                    case 4:
+                        return "CMPP接口提交";
+                    default:
+                        return "";
+                }
+            }
+            },
+            {name: "MOBILE", index: "MOBILE", width: 30},
+            {
+                name: "REPORT", index: "REPORT", width: 30
+            },
+            {name: "CREATE_TIME", index: "CREATE_TIME", width: 40},
+            {name: "REPORT_TIME", index: "REPORT_TIME", width: 40},
+            {name: "CONTENT", index: "CONTENT", width: 100},
+            {name: "SP_CODE", index: "SP_CODE", width: 30}
+        ];
+
+        var _filter='{"CREATE_TIME_dategt":"'+getNowFormatDate()+'","CREATE_TIME_datelt":"'+getNowFormatDate()+'"}';
+        @ if (shiro.isRole("msg_user")) {
+            _filter = '{"ACCOUNT_equal":"${shiro.getUser().loginName}",'+'"CREATE_TIME_dategt":"'+getNowFormatDate()+'","CREATE_TIME_datelt":"'+getNowFormatDate()+'"}';
+            _colnames = ["账号", "提交方式", "手机号码", "发送状态", "发送时间", "接收时间", "短信内容"];
+	    _colmodel = [
+            {name: "ACCOUNT", index: "ACCOUNT", width: 30},
+            {
+                name: "SUBMIT_TYPE", index: "SUBMIT_TYPE", width: 30, formatter: function (cellvalue, options, rowObject) {
+                switch (cellvalue) {
+                    case 1:
+                        return "WEB提交";
+                    case 2:
+                        return "单发接口提交";
+                    case 3:
+                        return "群发接口提交";
+                    case 4:
+                        return "CMPP接口提交";
+                    default:
+                        return "";
+                }
+            }
+            },
+            {name: "MOBILE", index: "MOBILE", width: 30},
+            {
+                name: "REPORT", index: "REPORT", width: 30
+            },
+            {name: "CREATE_TIME", index: "CREATE_TIME", width: 40},
+            {name: "REPORT_TIME", index: "REPORT_TIME", width: 40},
+            {name: "CONTENT", index: "CONTENT", width: 130}
+        ]
+       @ }
+
+        jQuery(grid_selector).jqGrid({
+            url: grid_url,
+            shrinkToFit: true,//适用于较少字段,响应式
+            colNames: _colnames,
+            colModel: _colmodel,
+            jsonReader: {id: "id"},
+            pager: pager_selector,
+            postData: {where: _filter,sort: "CREATE_TIME", order: "desc"},
+            rownumbers: false,
+            multiselect: false,
+            loadComplete: function () {
+                var table = this;
+                setTimeout(function () {
+                    updatePagerIcons(table);
+                    //自适应表格高度 -- 表格初始化后调用
+                    autoResize(grid_selector, 280);
+                    $jqGrid = $(grid_selector);
+                }, 0);
+            }
+        });
+    }
+
+</script>
+
+
+<!-- 配置grid -->
+<div class="row">
+    <div class="col-xs-12 tb-grid">
+
+        <!-- 配置查询 -->
+        @ var _col=[
+        @ {name:"账号",index:"ACCOUNT", type:"text"},
+        @ {name:"批次编号",index:"MONTH_SEQ",type:"text"},
+        @ {name:"短信内容",index:"CONTENT",type:"text"},
+        @ {name:"手机号码",index:"MOBILE",type:"text"},
+@ {name:"开始时间",index:"CREATE_TIME_dategt", type:"date",format:"YYYY-MM-DD"},
+	@ {name:"结束时间",index:"CREATE_TIME_datelt", type:"date",format:"YYYY-MM-DD"},
+        @ {name:"短信状态",index:"REPORT",type:"select_905"},
+        @ {name:"提交方式",index:"SUBMIT_TYPE",type:"select_904"},
+        @ {name:"接入号",index:"SP_CODE",type:"text"},
+        @ {name:"具体状态",index:"REPORT2",type:"text"}
+        @ ];
+        @ include("/common/_function/_search_msg.html",{"col":_col}){}
+        <!-- 按钮组 -->
+        <!--<div class="welljq well-sm" id="btns"></div>-->
+        <!-- grid -->
+        <table id="grid-table"></table>
+        <!-- 分页 -->
+        <div id="grid-pager"></div>
+    </div>
+</div>
+<!-- 引入列表页所需js -->
+@include("/common/_listscript.html"){}
+@}	

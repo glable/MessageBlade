@@ -1,0 +1,104 @@
+@layout("/common/_container.html"){
+<!-- PAGE CONTENT BEGINS -->
+<form data-url="${ctxPath}/user/save" method="post" class="form-horizontal" role="form">
+    <div class="space-4"></div>
+    <!-- #section:elements.form -->
+    <div class="form-group">
+        <input type="hidden" name="BLADE_USER.ROLEID" value="999">
+        <input type="hidden" name="BLADE_USER.DEPTID" value="1">
+        <label class="col-sm-2 control-label no-padding-right"> 账户 </label>
+        <div class="col-sm-3">
+            <input type="text" name="BLADE_USER.ACCOUNT" placeholder="请输入账户" class="form-control"/>
+        </div>
+
+        <label class="col-sm-2 control-label no-padding-right"> 姓名 </label>
+        <div class="col-sm-3">
+            <input type="text" name="BLADE_USER.NAME" value="" placeholder="请输入姓名" class="form-control"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right"> 性别 </label>
+        <div class="col-sm-3">
+            <select onchange="_SEX_selectChanged('_SEX')" null="" class="form-control" id="_SEX" name="BLADE_USER.SEX">
+                <option value=""></option>
+                <option value="1">男</option>
+                <option value="2">女</option>
+            </select>
+        </div>
+
+        <label class="col-sm-2 control-label no-padding-right"> 出生日期 </label>
+
+        <div class="col-sm-3">
+            <input type="text" id="birthday" name="BLADE_USER.BIRTHDAY" class="form-control" value=""
+                   placeholder="请选择出生日期"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right"> 密码 </label>
+
+        <div class="col-sm-3">
+            <input type="password" id="pwd1" name="BLADE_USER.PASSWORD" onkeyup="checkpwd1();" value=""
+                   placeholder="请输入密码" class="form-control"/>
+        </div>
+
+        <label class="col-sm-2 control-label no-padding-right"> 确认密码 </label>
+        <div class="col-sm-3">
+            <input type="password" id="pwd2" name="password" onkeyup="checkpwd2();" value="" placeholder="请再次输入密码"
+                   class="form-control"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right"> 邮箱 </label>
+
+        <div class="col-sm-3">
+            <input type="text" name="BLADE_USER.EMAIL" value="" placeholder="请输入邮箱" class="form-control"/>
+        </div>
+
+        <label class="col-sm-2 control-label no-padding-right"> 电话 </label>
+        <div class="col-sm-3">
+            <input type="text" name="BLADE_USER.PHONE" value="" placeholder="请输入电话" class="form-control"/>
+        </div>
+    </div>
+
+
+    <script src="${ctxPath}/static/laydate/laydate.js"></script>
+    <script type="text/javascript">
+        laydate({
+            elem: '#birthday',
+            format: 'YYYY-MM-DD hh:mm:ss', // 分隔符可以任意定义，该例子表示只显示年月日
+            //festival: true, //显示节日
+            choose: function (datas) { //选择日期完毕的回调
+                /*   alert('得到：'+datas); */
+            }
+        });
+
+        function checkpwd1() {
+            if (/[ ]/.test($("#pwd1").val())) {
+                layer.msg("密码不能含有空格！", {icon: 1});
+                $("#pwd1").val("");
+                return false;
+            }
+        }
+
+        function checkpwd2() {
+            if (/[ ]/.test($("#pwd2").val())) {
+                layer.msg("密码不能含有空格！", {icon: 1});
+                $("#pwd2").val("");
+                return false;
+            }
+        }
+
+        function _SEX_selectChanged(sid) {
+            $('#form_token').val(1);
+            $('#' + sid).attr('name', 'BLADE_USER.SEX');
+        }
+    </script>
+
+    <div class="space-4"></div>
+    <!-- 按钮 -->
+    @ include("/common/_curd/_btn.html",{btn_save:"注册",btn_close:"关闭"}) {}
+</form>
+@}

@@ -1,0 +1,11 @@
+sourceList
+===
+select ACCOUNT,MOBILE,CONTENT,CREATE_TIME,REPORT,REPORT_TIME,MONTH_SEQ from MT_MSG
+
+list
+===
+select * from MT_MSG
+
+mo
+===
+select ACCOUNT,MOBILE,CONTENT,CREATE_TIME from MO_MSG
