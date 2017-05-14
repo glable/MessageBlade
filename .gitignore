@@ -21,6 +21,7 @@ Thumbs.db
 *.iml
 
 # Package Files #
+*.jar
 *.war
 *.ear
 /target
