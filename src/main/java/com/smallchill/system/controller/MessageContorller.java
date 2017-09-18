@@ -22,6 +22,7 @@ import com.smallchill.core.base.controller.CurdController;
 import com.smallchill.core.meta.IMeta;
 import com.smallchill.core.meta.MetaIntercept;
 import com.smallchill.core.shiro.ShiroKit;
+import com.smallchill.core.toolbox.grid.JqGrid;
 import com.smallchill.core.toolbox.kit.ClassKit;
 import com.smallchill.core.toolbox.kit.StrKit;
 import com.smallchill.system.meta.factory.MessageFactory;
@@ -39,8 +40,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/message")
@@ -256,6 +256,63 @@ public class MessageContorller extends CurdController<Message> {
         result.put("message", "获取短信状态成功");
         result.put("data", grid);
         return jsonpCallback + "(" + JSON.toJSONString(result) + ")";
+    }
+
+
+    @Json
+    @RequestMapping("/info")
+    public Object info() throws UnsupportedEncodingException {
+        Map<String, Object> result = new HashMap();
+        result.put("code", 0);
+        // 获取用户角色 非管理员直接return
+        if(!ShiroKit.getUser().getRoles().equals("1") && !ShiroKit.getUser().getRoles().equals("45")){
+            result.put("code", 1);
+            return result;
+        }
+        Object grid;
+        if(System.currentTimeMillis()/5000%2 == 0){
+            grid = service.paginate(1, 1,
+                    sourceMap.get(KEY_LIST), null, "REPORT_DATE", "desc",
+                    intercept, ctrl);
+            ArrayList record = ((ArrayList) ((JqGrid) grid).getRows());
+            if(null == record || record.size() ==0){
+                result.put("code", 1);
+            }else{
+                String message = "用户【";
+                LinkedHashMap<String,Object> myMap = (LinkedHashMap<String, Object>) record.get(0);
+                for(Iterator iter = myMap.entrySet().iterator(); iter.hasNext();){
+                    Map.Entry element = (Map.Entry)iter.next();
+                    if(element.getKey().equals("ACCOUNT")){
+                        message+=element.getValue();
+                        message+="】";
+                    }
+                    if(element.getKey().equals("REPORT_DATE")){
+                        message+=element.getValue();
+                        message+="短信发送成功率为:";
+                    }
+                    if(element.getKey().equals("SUCCESS")){
+                        message+=element.getValue();
+                        message+=" ";
+                    }
+                }
+                result.put("message",message);
+            }
+        }else{
+            grid = service.paginate(1, 1,
+                    sourceMap.get(KEY_VIEW), null, "CREATE_TIME", "desc",
+                    intercept, ctrl);
+            ArrayList record = ((ArrayList) ((JqGrid) grid).getRows());
+            if(null == record || record.size() ==0){
+                result.put("code", 1);
+            }else{
+                result.put("message","AUDIT_SMS");
+            }
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(System.currentTimeMillis());
     }
 
 }

@@ -42,6 +42,8 @@ public class MessageFactory extends MetaManager {
 		Map<String, String> sourceMap = new HashMap<>();
 		sourceMap.put(KEY_INDEX, "message.sourceList");
 		sourceMap.put(KEY_ADD, "message.mo");
+		sourceMap.put(KEY_LIST, "message.report");
+		sourceMap.put(KEY_VIEW, "message.audit");
 		return sourceMap;
 	}
 
