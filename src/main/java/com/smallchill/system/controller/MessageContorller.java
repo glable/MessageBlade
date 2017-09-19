@@ -21,6 +21,7 @@ import com.smallchill.core.base.controller.BladeController;
 import com.smallchill.core.base.controller.CurdController;
 import com.smallchill.core.meta.IMeta;
 import com.smallchill.core.meta.MetaIntercept;
+import com.smallchill.core.plugins.dao.Db;
 import com.smallchill.core.shiro.ShiroKit;
 import com.smallchill.core.toolbox.grid.JqGrid;
 import com.smallchill.core.toolbox.kit.ClassKit;
@@ -279,6 +280,7 @@ public class MessageContorller extends CurdController<Message> {
                 result.put("code", 1);
             }else{
                 String message = "用户【";
+                String id = "";
                 LinkedHashMap<String,Object> myMap = (LinkedHashMap<String, Object>) record.get(0);
                 for(Iterator iter = myMap.entrySet().iterator(); iter.hasNext();){
                     Map.Entry element = (Map.Entry)iter.next();
@@ -294,6 +296,12 @@ public class MessageContorller extends CurdController<Message> {
                         message+=element.getValue();
                         message+=" ";
                     }
+                    if(element.getKey().equals("ID")){
+                        id=element.getValue().toString();
+                    }
+                }
+                if(StringUtils.isNotBlank(id)){
+                    Db.update("update ACCOUNT_DAY_REPORT set status = 1 where  id = '" +id+"'",null);
                 }
                 result.put("message",message);
             }
